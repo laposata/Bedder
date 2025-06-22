@@ -20,7 +20,7 @@ public class BedBlockMixin {
     public void trackSpamClicks(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit, CallbackInfoReturnable<ActionResult> cir) {
         if (player instanceof ISpamClick spammer) {
             spammer.spamClicker();
-            spammer.getClicker().setBuildMode();
+            spammer.getClicker().setBedMode();
         }
     }
 }
