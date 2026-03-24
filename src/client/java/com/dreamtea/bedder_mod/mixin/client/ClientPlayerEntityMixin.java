@@ -6,6 +6,7 @@ import net.minecraft.client.ClientRecipeBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.chat.ChatAbilities;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.stats.StatsCounter;
 import net.minecraft.world.entity.player.Input;
@@ -34,7 +35,17 @@ public class ClientPlayerEntityMixin implements ISpamClick {
     }
 
     @Inject(method = "<init>", at= @At("TAIL"))
-    public void addSpamClicker(Minecraft client, ClientLevel world, ClientPacketListener networkHandler, StatsCounter stats, ClientRecipeBook recipeBook, Input lastPlayerInput, boolean lastSprinting, CallbackInfo ci){
+    public void addSpamClicker(
+        Minecraft client,
+        ClientLevel world,
+        ClientPacketListener networkHandler,
+        StatsCounter stats,
+        ClientRecipeBook recipeBook,
+        Input lastPlayerInput,
+        boolean lastSprinting,
+        ChatAbilities chatAbilities,
+        CallbackInfo ci
+    ){
         clicker = new SpamTracker();
     }
 

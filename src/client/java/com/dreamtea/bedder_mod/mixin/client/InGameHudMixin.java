@@ -6,7 +6,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,22 +20,22 @@ public abstract class InGameHudMixin {
     @Shadow @Final private Minecraft minecraft;
 
     @Redirect(
-            method = "renderOverlayMessage",
+            method = "extractOverlayMessage",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/GuiGraphics;drawStringWithBackdrop(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIII)V"
+                    target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;textWithBackdrop(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIII)V"
             )
     )
     public void adjustFont(
-            GuiGraphics instance,
-            Font textRenderer,
-            Component text,
-            int x,
-            int y,
-            int width,
-            int color,
-            GuiGraphics context,
-            DeltaTracker tickCounter
+        GuiGraphicsExtractor instance,
+        Font textRenderer,
+        Component text,
+        int x,
+        int y,
+        int width,
+        int color,
+        GuiGraphicsExtractor context,
+        DeltaTracker tickCounter
     ){
         int drawColor = color;
         if(this.minecraft.player instanceof ISpamClick isc) {
@@ -46,6 +46,6 @@ public abstract class InGameHudMixin {
                 drawColor = isc.getClicker().getColor();
             }
         }
-        context.drawStringWithBackdrop(textRenderer, text, x, y, width, drawColor);
+        context.textWithBackdrop(textRenderer, text, x, y, width, drawColor);
     }
 }
