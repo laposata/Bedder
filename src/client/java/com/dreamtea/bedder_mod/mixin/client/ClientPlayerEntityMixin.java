@@ -2,20 +2,21 @@ package com.dreamtea.bedder_mod.mixin.client;
 
 import com.dreamtea.bedder_mod.SpamTracker;
 import com.dreamtea.bedder_mod.imixin.ISpamClick;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.recipebook.ClientRecipeBook;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.stat.StatHandler;
-import net.minecraft.util.PlayerInput;
+import net.minecraft.client.ClientRecipeBook;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.chat.ChatAbilities;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.stats.StatsCounter;
+import net.minecraft.world.entity.player.Input;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ClientPlayerEntity.class)
+@Mixin(LocalPlayer.class)
 public class ClientPlayerEntityMixin implements ISpamClick {
 
     @Unique
@@ -24,7 +25,7 @@ public class ClientPlayerEntityMixin implements ISpamClick {
     @Override
     public int spamClicker() {
         if(clicker == null) return 0;
-        return clicker.click(((ClientPlayerEntity) (Object) this).age);
+        return clicker.click(((LocalPlayer) (Object) this).tickCount);
     }
 
     @Override
@@ -34,7 +35,17 @@ public class ClientPlayerEntityMixin implements ISpamClick {
     }
 
     @Inject(method = "<init>", at= @At("TAIL"))
-    public void addSpamClicker(MinecraftClient client, ClientWorld world, ClientPlayNetworkHandler networkHandler, StatHandler stats, ClientRecipeBook recipeBook, PlayerInput lastPlayerInput, boolean lastSprinting, CallbackInfo ci){
+    public void addSpamClicker(
+        Minecraft client,
+        ClientLevel world,
+        ClientPacketListener networkHandler,
+        StatsCounter stats,
+        ClientRecipeBook recipeBook,
+        Input lastPlayerInput,
+        boolean lastSprinting,
+        ChatAbilities chatAbilities,
+        CallbackInfo ci
+    ){
         clicker = new SpamTracker();
     }
 

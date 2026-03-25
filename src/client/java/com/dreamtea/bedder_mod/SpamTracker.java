@@ -1,8 +1,8 @@
 package com.dreamtea.bedder_mod;
 
-import net.minecraft.text.Text;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.Mth;
 import org.joml.Matrix3x2fStack;
 
 
@@ -18,7 +18,7 @@ public class SpamTracker {
     }
     private int clickCount = 0;
     private int tickOfLastClick;
-    private Text spammedText;
+    private Component spammedText;
     private Mode mode = Mode.NONE;
     public boolean active(){
         return clickCount != 0;
@@ -40,7 +40,7 @@ public class SpamTracker {
         return clickCount;
     }
 
-    public void setSpammedText(Text text){
+    public void setSpammedText(Component text){
         if(spammedText != null && spammedText.contains(text)){
             return;
         }
@@ -52,7 +52,7 @@ public class SpamTracker {
     }
     public float sizeScale(){
         return switch (mode){
-            case BED -> MathHelper.clamp(1 + (clickCount / 25f), 1, 6f);
+            case BED -> Mth.clamp(1 + (clickCount / 25f), 1, 6f);
             case BUILD -> 1f;
             default -> 0;
         };
@@ -69,7 +69,7 @@ public class SpamTracker {
 
     public int xTranslate(){
         return switch (mode){
-            case BED -> MathHelper.clamp(clickCount / 2, 0, 28);
+            case BED -> Mth.clamp(clickCount / 2, 0, 28);
             case BUILD -> 0;
             default -> 0;
         };
@@ -79,7 +79,7 @@ public class SpamTracker {
         switch (mode){
             case BED -> {
                 matrices.scale(sizeScale(), yScale());
-                matrices.translate(xTranslate(), -MathHelper.clamp(clickCount/25f, 0, 2));
+                matrices.translate(xTranslate(), -Mth.clamp(clickCount/25f, 0, 2));
             }
             case BUILD -> {
                 matrices.translate(xTranslate(), -(clickCount));
@@ -88,7 +88,7 @@ public class SpamTracker {
     }
 
     public int getColor(){
-        int scale = MathHelper.clamp(clickCount, 0, 255);
-        return ColorHelper.getArgb(255,255 - MathHelper.clamp(clickCount - 255, 0, 150), 255 - scale, 255 - scale);
+        int scale = Mth.clamp(clickCount, 0, 255);
+        return ARGB.color(255,255 - Mth.clamp(clickCount - 255, 0, 150), 255 - scale, 255 - scale);
     }
 }
