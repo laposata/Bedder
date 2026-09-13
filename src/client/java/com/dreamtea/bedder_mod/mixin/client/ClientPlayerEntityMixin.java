@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.chat.ChatAbilities;
+import net.minecraft.client.player.ItemActivation;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.stats.StatsCounter;
 import net.minecraft.world.entity.player.Input;
@@ -44,6 +45,7 @@ public class ClientPlayerEntityMixin implements ISpamClick {
         Input lastPlayerInput,
         boolean lastSprinting,
         ChatAbilities chatAbilities,
+        ItemActivation itemActivation,
         CallbackInfo ci
     ){
         clicker = new SpamTracker();
